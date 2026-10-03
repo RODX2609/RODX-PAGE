@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Luis Rodríguez — Portafolio VFX / 3D / Dirección</title>
+<script>/* modo liviano: táctil/celular. Forzar con ?lite=1 o ?lite=0 */
+(function(){var q=location.search,m=window.matchMedia,l=/[?&]lite=1/.test(q)?1:/[?&]lite=0/.test(q)?0:(m&&m("(pointer: coarse)").matches?1:0);if(l)document.documentElement.classList.add("lite");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&family=Work+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -541,6 +543,37 @@ main{position:relative;z-index:3}
   .rate-grid{grid-template-columns:1fr}
 }
 
+
+/* ================= LITE: celular / táctil (PC no se toca) ================= */
+.yt-facade,.ig-facade{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;margin:0;cursor:pointer;display:flex;align-items:center;justify-content:center;background:#000 center/cover no-repeat;color:#fff;text-decoration:none}
+.yt-facade::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.45),rgba(0,0,0,.05) 55%)}
+.yt-play{position:relative;z-index:1;width:68px;height:68px;border-radius:50%;background:rgba(10,10,11,.72);border:1.5px solid var(--amber);display:flex;align-items:center;justify-content:center}
+.yt-play::before{content:"";margin-left:5px;border-left:18px solid var(--amber);border-top:11px solid transparent;border-bottom:11px solid transparent}
+.ig-facade{flex-direction:column;gap:14px;background:linear-gradient(155deg,rgba(26,148,171,.28),rgba(199,58,46,.22) 55%,rgba(242,167,11,.24)),#0e0e10;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1.4px;text-transform:uppercase}
+.ig-facade .yt-play{background:rgba(10,10,11,.55)}
+.ig-facade b{font-weight:500}
+html.lite{scroll-behavior:auto}
+.lite .grain,.lite .cursor-glow,.lite #gl{display:none}
+.lite .aurora i{animation:none;will-change:auto}
+.lite .lb-layer{opacity:.55}
+.lite .hero::before,.lite .mark span,.lite .hero-kicker .dot,.lite .cue .mouse::after,.lite .shimmer,.lite .mq-item.fill,.lite .mq-star{animation:none}
+.lite .mq-track{will-change:auto}
+.lite .cue,.lite .hud{display:none}
+.lite .spin-border::before{display:none}
+.lite .rate-btn.ready,.lite .cm-card{border-color:rgba(242,167,11,.45)}
+.lite *,.lite *::before,.lite *::after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.lite .topbar{background:rgba(10,10,11,.94)}
+.lite .glass{background:linear-gradient(155deg,rgba(24,24,27,.97),rgba(18,18,20,.94));box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.lite .chip{background:rgba(18,18,20,.92);transition:color .3s,border-color .3s,background .3s,opacity .6s ease,transform .7s var(--ease)}
+.lite .glass:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.lite .rv,.lite .rv.from-l,.lite .rv.from-r{transform:translate3d(0,22px,0);filter:none;transition:opacity .6s ease,transform .7s var(--ease);transition-delay:0s}
+.lite .rv.in{opacity:1;transform:none}
+.lite .rv-clip{clip-path:none;opacity:0;transform:translate3d(0,18px,0);transition:opacity .6s ease,transform .7s var(--ease);transition-delay:0s}
+.lite .rv-clip.in{opacity:1;transform:none}
+.lite .wi{transform:none;transition:none}
+.lite .g-par{top:0;bottom:0;will-change:auto}
+.lite .g-par img{transform:none;transition:none}
+
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;transition-delay:0s!important}
@@ -1029,11 +1062,12 @@ main{position:relative;z-index:3}
   </div>
 </div>
 
-<script src="three.min.js"></script>
+<script>if(!document.documentElement.classList.contains("lite"))document.write('<script src="three.min.js"><\/script>');</script>
 <script>
 (function(){
   'use strict';
   var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var LITE = document.documentElement.classList.contains('lite');
   var FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var root = document.documentElement;
   function $(s,c){return (c||document).querySelector(s);}
@@ -1071,7 +1105,7 @@ main{position:relative;z-index:3}
   var GLY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#/_*+';
   $$('[data-scramble]').forEach(function(el){ var t = el.textContent.replace(/\s+/g,' ').trim(); el.setAttribute('data-text', t); el.textContent = t; });
   function scramble(el){
-    if(el._sc || RM) return; el._sc = true;
+    if(el._sc || RM || LITE) return; el._sc = true;
     var fin = el.getAttribute('data-text'), t0 = performance.now(), dur = Math.min(1300, 420 + fin.length * 26);
     (function step(now){
       var p = clamp((now - t0) / dur, 0, 1), n = Math.floor(p * fin.length), out = fin.slice(0, n);
@@ -1139,7 +1173,7 @@ main{position:relative;z-index:3}
   $$('a', menu).forEach(function(a){ a.addEventListener('click', function(){ setMenu(false); }); });
 
   /* ---------- marquee ---------- */
-  var rows = $$('.mq-track').map(function(t, i){ t.innerHTML += t.innerHTML; return {el:t, x: i ? -300 : 0, dir: i ? -1 : 1, w:1}; });
+  var rows = $$('.mq-track').map(function(t, i){ if(!LITE) t.innerHTML += t.innerHTML; return {el:t, x: i ? -300 : 0, dir: i ? -1 : 1, w:1}; });
   function measureMq(){ rows.forEach(function(r){ r.w = Math.max(r.el.scrollWidth / 2, 1); }); }
   function updateMarquee(dt, vs){
     var speed = 50 + Math.min(Math.abs(vs), 70) * 15, flip = vs < -0.6 ? -1 : 1, sk = clamp(vs * -0.35, -10, 10);
@@ -1153,7 +1187,7 @@ main{position:relative;z-index:3}
 
   /* ---------- tilt, glare, magnetic, cursor ---------- */
   var mouseN = {x:0, y:0}, mx = innerWidth / 2, my = innerHeight / 2, gx = mx, gy = my, glow = $('.cursor-glow');
-  if(FINE && !RM){
+  if(FINE && !RM && !LITE){
     $$('[data-tilt]').forEach(function(el){
       el.addEventListener('pointermove', function(e){
         var r = el.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
@@ -1176,7 +1210,7 @@ main{position:relative;z-index:3}
 
   /* ---------- image parallax ---------- */
   var pars = $$('.g-par'), visPars = [];
-  if(!RM && 'IntersectionObserver' in window){
+  if(!RM && !LITE && 'IntersectionObserver' in window){
     var pio = new IntersectionObserver(function(ents){
       ents.forEach(function(en){
         var i = visPars.indexOf(en.target);
@@ -1199,7 +1233,7 @@ main{position:relative;z-index:3}
   var hsec = $('#branding'), hsTrack = $('.hs-track'), hsVp = $('.hs-viewport'), hsCards = $$('.brand-card', hsTrack);
   var hsBar = $('.hs-bar i'), hsNum = $('.hs-num'), hsPinned = null, hsDist = 0;
   function setHsMode(){
-    var want = !RM && innerWidth >= 900 && innerHeight >= 640;
+    var want = !RM && !LITE && innerWidth >= 900 && innerHeight >= 640;
     hsPinned = want;
     hsec.classList.toggle('pinned', want);
     hsTrack.style.transform = '';
@@ -1307,11 +1341,35 @@ main{position:relative;z-index:3}
     } else if(e.key === 'Escape' && menu.classList.contains('open')) setMenu(false);
   });
 
+  /* ---------- lite: embeds pesados -> carga al tocar ---------- */
+  if(LITE){
+    $$('.mv-card .frame iframe').forEach(function(f){
+      var m = /youtube\.com\/embed\/([\w-]+)/.exec(f.getAttribute('src') || ''); if(!m) return;
+      var id = m[1], src = f.getAttribute('src'), title = f.getAttribute('title') || 'Video', allow = f.getAttribute('allow');
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'yt-facade';
+      b.setAttribute('aria-label', 'Reproducir: ' + title);
+      b.style.backgroundImage = 'url(https://i.ytimg.com/vi/' + id + '/hqdefault.jpg)';
+      b.innerHTML = '<span class="yt-play"></span>';
+      b.addEventListener('click', function(){
+        var n = document.createElement('iframe');
+        n.src = src + (src.indexOf('?') < 0 ? '?' : '&') + 'autoplay=1'; n.title = title; if(allow) n.setAttribute('allow', allow); n.setAttribute('allowfullscreen', '');
+        b.parentNode.replaceChild(n, b);
+      });
+      f.parentNode.replaceChild(b, f);
+    });
+    $$('blockquote.instagram-media').forEach(function(q){
+      var a = document.createElement('a'); a.className = 'ig-facade'; a.target = '_blank'; a.rel = 'noopener';
+      a.href = q.getAttribute('data-instgrm-permalink');
+      a.innerHTML = '<span class="yt-play"></span><b>Ver reel en Instagram ↗</b>';
+      q.parentNode.replaceChild(a, q);
+    });
+  }
+
   /* ---------- WebGL scene ---------- */
   function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
   function initGL(){
     var canvas = document.getElementById('gl');
-    if(!window.THREE){ canvas.remove(); return null; }
+    if(LITE || !window.THREE){ canvas.remove(); return null; }
     var T = window.THREE, renderer;
     try{ renderer = new T.WebGLRenderer({canvas:canvas, antialias:true, alpha:true, powerPreference:'high-performance'}); }
     catch(err){ canvas.remove(); return null; }
@@ -1520,33 +1578,40 @@ main{position:relative;z-index:3}
     vs += (v - vs) * 0.15;
     var max = document.documentElement.scrollHeight - innerHeight, sp = max > 0 ? clamp(y / max, 0, 1) : 0;
     prog.style.transform = 'scaleX(' + sp.toFixed(4) + ')';
-    layerB.style.opacity = sp.toFixed(3);
+    if(!LITE) layerB.style.opacity = sp.toFixed(3);
     var hp = Math.round(clamp(y / (innerHeight * 0.9), 0, 1) * 1000) / 1000;
     if(hp !== lastHp){ heroEl.style.setProperty('--hp', hp); lastHp = hp; }
     if(!menu.classList.contains('open')){
       if(y > innerHeight * 0.8 && v > 3) topbar.classList.add('hide');
       else if(v < -3 || y < innerHeight * 0.8) topbar.classList.remove('hide');
     }
-    updateNav(); updateHs(); updateTl(); updateFoot(); sweepReveals(now);
+    updateNav(); updateHs(); updateTl(); if(!LITE) updateFoot(); sweepReveals(now);
     var hp2 = clamp(y / innerHeight, 0, 2), ra = RM ? 1 : clamp(hp2 * 1.6, 0, 1);
-    if(!RM){
+    if(!RM && !LITE){
       updateMarquee(dt, vs); updatePars();
       if(glow){ gx += (mx - gx) * 0.12; gy += (my - gy) * 0.12; glow.style.transform = 'translate3d(' + (gx - 280).toFixed(1) + 'px,' + (gy - 280).toFixed(1) + 'px,0)'; }
     }
     if(gl) ra = gl.render(RM ? 0 : dt, RM ? 0 : y, RM ? 0 : vs, RM ? {x:0, y:0} : mouseN, RM ? 0.625 : hp2);
-    updateHud(ra, now);
+    if(!LITE) updateHud(ra, now);
   }
 
   function relayout(){
     setHsMode(); measureMq();
     if(gl) gl.layout();
     updateNav(true);
-    if(RM) frame(performance.now(), 0);
+    if(RM || LITE) frame(performance.now(), 0);
   }
   setHsMode(); measureMq(); updateNav(true);
   if(RM){
     frame(performance.now(), 0);
     window.addEventListener('scroll', function(){ frame(performance.now(), 0); }, {passive:true});
+  } else if(LITE){
+    var tick = false;
+    frame(performance.now(), 0);
+    window.addEventListener('scroll', function(){
+      if(tick) return; tick = true;
+      requestAnimationFrame(function(){ tick = false; frame(performance.now(), 0); });
+    }, {passive:true});
   } else {
     (function loop(now){ frame(now); requestAnimationFrame(loop); })(performance.now());
   }
@@ -1563,6 +1628,6 @@ main{position:relative;z-index:3}
   }
 })();
 </script>
-<script async src="https://www.instagram.com/embed.js"></script>
+<script>if(!document.documentElement.classList.contains('lite')){var ig=document.createElement('script');ig.async=true;ig.src='https://www.instagram.com/embed.js';document.body.appendChild(ig);}</script>
 </body>
 </html>
